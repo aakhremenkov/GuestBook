@@ -1,6 +1,5 @@
 function checkInput()
 {
-    $("#errorMsg").html('');
     var input = document.getElementById('fileId');
     if (input && input.files&& input.files[0])
     {
@@ -16,7 +15,7 @@ function checkInput()
         }
         validateImageSize(input);
     }
-    if(!$("#errorMsg").is(':empty'))
+    if($("#errorMsg").html().length > 0)
     {
         return;
     }

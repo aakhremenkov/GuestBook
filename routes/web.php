@@ -12,11 +12,11 @@
 */
 
 Route::get('/', 'PagesController@getGuestBook');
-Route::get('guestbook', 'PagesController@getGuestBook');
-Route::get('edit/{id}', 'PagesController@getEdit')->name('edit');
-Route::get('response/{id}', 'PagesController@getResponse')->name('response');
-Route::post('addMessage', 'PagesController@postAddMessage')->name('addMessage');
-Route::post('messageValidate', 'PagesController@postMessageValidate')->name('messageValidate');
+Route::get('guestbook', 'UserController@getGuestBook');
+Route::get('edit/{id}', 'UserController@getEdit')->name('edit');
+Route::get('response/{id}', 'UserController@getResponse')->name('response');
+Route::post('addMessage', 'UserController@postAddMessage')->name('addMessage');
+Route::post('messageValidate', 'UserController@postMessageValidate')->name('messageValidate');
 
 
 Route::get('signup', 'Auth\RegisterController@getSignupForm')->name('signup');
