@@ -83,7 +83,7 @@ function validateImageSize(input)
 
         window.URL.revokeObjectURL( img.src );
 
-        if( width < 100 || width > 5000 || height < 100 || height > 5000) {
+        if( width < 100 || width > 500 || height < 100 || height > 500) {
             $("#errorMsg").html('Image should be more than 100x100 and less than 500x500.');
         }
     };
