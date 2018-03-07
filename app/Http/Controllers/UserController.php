@@ -9,6 +9,7 @@ use Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
+use Image;
 
 class UserController extends Controller
 {
@@ -56,15 +57,23 @@ class UserController extends Controller
             $ext = $request->file->getClientOriginalExtension();
             $imgName = Helper::GenerateRandomString(8) . '.' . $ext;
             $request->file->move($avatar_path, $imgName);
+            $img = Image::make($avatar_path. '/'. $imgName);
+
+            $rate = max($img->height()/ 500, $img->width()/ 500);
+            if($rate > 1)
+            {
+                $img->resize($img->width() / $rate, $img->height() / $rate);
+            }
+            $img->save($avatar_path. '/'. $imgName);
         }
 
         switch ($request->action)
         {
-            case 'add' : Message::AddMessage($request->message, $imgName, Auth::user()->id, 0);
+            case 'add' : Message::AddMessage($request->message, $imgName, Auth::user()->id, 0, $request->userAgent(), $request->ip());
                 session()->flash("info_msg", "Message added.");break;
-            case 'response' : Message::AddMessage($request->message, $imgName, Auth::user()->id, $request->parentId);
+            case 'response' : Message::AddMessage($request->message, $imgName, Auth::user()->id, $request->parentId, $request->userAgent(), $request->ip());
                 session()->flash("info_msg", "Response added.");break;
-            case 'update' : Message::UpdateMessage($request->message, $imgName, Auth::user()->id, $request->messageId) ?
+            case 'update' : Message::UpdateMessage($request->message, $imgName, Auth::user()->id, $request->messageId, $request->userAgent(), $request->ip()) ?
                 session()->flash("info_msg", "Message updated."):
                 session()->flash("error_msg", "Can't update the message.");
                 break;

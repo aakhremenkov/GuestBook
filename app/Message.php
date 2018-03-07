@@ -14,7 +14,7 @@ use DB;
 class Message extends Model
 {
 
-    protected $fillable = ['parent_id', 'user_id', 'message', 'image', 'hasResponse'];
+    protected $fillable = ['parent_id', 'user_id', 'message', 'image', 'hasResponse', 'agent', 'ip'];
 
     protected $table = 'message';
 
@@ -60,7 +60,7 @@ class Message extends Model
             ->get();
     }
 
-    public static function AddMessage($message, $image, $user_id, $parent_id = 0)
+    public static function AddMessage($message, $image, $user_id, $parent_id = 0, $agent, $ip)
     {
         if($parent_id > 0) {
             $parent = Message::GetById($parent_id);
@@ -72,21 +72,23 @@ class Message extends Model
             'image' => !empty($image) ? $image : 'noimages.jpg',
             'user_id' => $user_id,
             'parent_id' => $parent_id,
-            'hasResponse' => false
+            'hasResponse' => false,
+            'agent' => $agent,
+            'ip' => $ip
         ]);
     }
 
-    public static function UpdateMessage($message, $image, $user_id, $messageId)
+    public static function UpdateMessage($message, $image, $user_id, $messageId,$agent, $ip)
     {
         $original = Message::GetById($messageId);
         if(!$original || $user_id != $original->user_id){
             return false;
         }
         if(!empty($image)){
-            $original->update(['message' => $message, 'image' => $image]);
+            $original->update(['message' => $message, 'image' => $image, 'agent' => $agent, 'ip' => $ip]);
         }
         else{
-            $original->update(['message' => $message]);
+            $original->update(['message' => $message, 'agent' => $agent, 'ip' => $ip]);
         }
 
         return true;
